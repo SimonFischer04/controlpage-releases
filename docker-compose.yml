@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:10.9.2
+    hostname: mariadb-controlpage
+    container_name: controlpage_mariadb
+    restart: unless-stopped
+    environment:
+      - MARIADB_ROOT_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      
+  adminer:
+    image: adminer
+    hostname: mariadb-controlpage-adminer
+    container_name: controlpage_adminer
+    restart: unless-stopped
+    networks:
+      - default
+      - nginxpm_net_private
+      
+  frontend:
+    container_name: controlpage_frontend
+    hostname: controlpage-frontend
+    depends_on:
+      - backend
+    image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/frontend:latest
+    restart: on-failure
+    #ports:
+    #  - 9999:80
+    networks:
+      - default
+      - nginxpm_net_private
+      
+  backend:
+    container_name: controlpage_backend
+    hostname: controlpage-backend
+    depends_on:
+      - db
+    image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/backend:latest
+    ports:
+      - 42000:42000
+    environment:
+      - DB_HOST=mariadb-controlpage
+    
+networks:
+  nginxpm_net_private:
+    external: true
+      
+volumes:
+  mariadb_data:
