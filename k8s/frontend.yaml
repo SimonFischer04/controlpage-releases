@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: frontend
+  name: frontend
+  namespace: controlpage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/frontend:latest
+          #imagePullPolicy: Always
+          env:
+            - name: DB_HOST
+              value: mysql
+          ports:
+            - containerPort: 80
+          resources: {}
+      imagePullSecrets:
+        - name: myregistrykey
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: controlpage
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: frontend

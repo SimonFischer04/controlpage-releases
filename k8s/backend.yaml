@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: appsrv
+  name: appsrv
+  namespace: controlpage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: appsrv
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: appsrv
+    spec:
+      containers:
+        - name: appsrv
+          image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/backend:latest
+          #imagePullPolicy: Always
+          env:
+            - name: DB_HOST
+              value: mysql
+          ports:
+            - containerPort: 42000
+          startupProbe:
+            httpGet:
+              path: /actuator/health
+              port: 42000
+            timeoutSeconds: 5
+            initialDelaySeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: 42000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 42000
+            timeoutSeconds: 5
+            initialDelaySeconds: 60
+            periodSeconds: 120
+          resources: {}
+      imagePullSecrets:
+        - name: myregistrykey
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appsrv
+  namespace: controlpage
+spec:
+  ports:
+    - port: 42000
+      targetPort: 42000
+      protocol: TCP
+  selector:
+    app: appsrv
