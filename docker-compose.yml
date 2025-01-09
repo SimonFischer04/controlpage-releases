@@ -2,14 +2,18 @@ version: '3'
 
 services:
   db:
-    image: mariadb:10
-    hostname: mariadb-controlpage
-    container_name: controlpage_mariadb
+    image: postgres:17
+    hostname: controlpage-postgres
+    container_name: controlpage_postgres
     restart: unless-stopped
     environment:
-      - MARIADB_ROOT_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
+      POSTGRES_DB: controlpage
+      POSTGRES_USER: controlpageuser
+      POSTGRES_PASSWORD: 6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
+    # ports:
+    #   - "5433:5432"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - pgdata:/var/lib/postgresql/data
 
   adminer:
     image: adminer
@@ -40,7 +44,7 @@ services:
     ports:
       - 42000:42000
     environment:
-      - DB_HOST=mariadb-controlpage
+      - DB_HOST=controlpage-postgres
 
 volumes:
-  mariadb_data:
+  pgdata:
