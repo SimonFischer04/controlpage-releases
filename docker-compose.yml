@@ -2,18 +2,25 @@ version: '3'
 
 services:
   db:
-    image: mariadb:10
-    hostname: mariadb-controlpage
-    container_name: controlpage_mariadb
+    image: postgres:17
+    hostname: postgres-controlpage
+    container_name: controlpage_postgres
     restart: unless-stopped
     environment:
-      - MARIADB_ROOT_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
+      - POSTGRES_DB=controlpage
+      - POSTGRES_USER=ControlPageUser
+      - POSTGRES_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "ControlPageUser", "-d", "controlpage"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   adminer:
     image: adminer
-    hostname: mariadb-controlpage-adminer
+    hostname: postgres-controlpage-adminer
     container_name: controlpage_adminer
     restart: unless-stopped
     depends_on:
@@ -35,12 +42,17 @@ services:
     image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/backend:latest
     container_name: controlpage_backend
     hostname: controlpage-backend
+    restart: on-failure
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - 42000:42000
     environment:
-      - DB_HOST=mariadb-controlpage
+      - DB_HOST=postgres-controlpage
+      # same as POSTGRES_USER / POSTGRES_PASSWORD of the db
+      - SPRING_DATASOURCE_USERNAME=ControlPageUser
+      - SPRING_DATASOURCE_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
 
 volumes:
-  mariadb_data:
+  postgres_data:
