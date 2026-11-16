@@ -20,11 +20,8 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/frontend:latest
+          image: gitlab-registry.fischerserver.eu/controlpage/controlpage-frontend:latest
           #imagePullPolicy: Always
-          env:
-            - name: DB_HOST
-              value: mysql
           ports:
             - containerPort: 80
           resources: {}
