@@ -36,7 +36,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:17
+          image: postgres:18
           env:
             - name: POSTGRES_DB
               valueFrom:
@@ -53,15 +53,14 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: password
-            # a sub directory, as the volume itself may contain a lost+found directory
-            - name: PGDATA
-              value: /var/lib/postgresql/data/pgdata
           ports:
             - containerPort: 5432
               name: postgres
           volumeMounts:
             - name: postgres-persistent-storage
-              mountPath: /var/lib/postgresql/data
+              # since PostgreSQL 18 the image keeps its data below /var/lib/postgresql (in 18/docker),
+              # so a lost+found directory of the volume does not get in the way
+              mountPath: /var/lib/postgresql
       volumes:
         - name: postgres-persistent-storage
           persistentVolumeClaim:

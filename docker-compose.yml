@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:17
+    image: postgres:18
     hostname: postgres-controlpage
     container_name: controlpage_postgres
     restart: unless-stopped
@@ -11,7 +11,8 @@ services:
       - POSTGRES_USER=ControlPageUser
       - POSTGRES_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # since PostgreSQL 18 the image keeps its data below /var/lib/postgresql (in 18/docker)
+      - postgres_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "ControlPageUser", "-d", "controlpage"]
       interval: 5s
