@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: appsrv
-          image: gitlab-registry.fischerserver.eu/controlpage/controlpage-releases/backend:latest
+          image: gitlab-registry.fischerserver.eu/controlpage/controlpage-backend:latest
           #imagePullPolicy: Always
           env:
             - name: DB_HOST
