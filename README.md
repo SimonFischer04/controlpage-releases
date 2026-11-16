@@ -26,7 +26,7 @@ The images are built and published by the pipelines of the individual projects, 
 | `gitlab-registry.fischerserver.eu/controlpage/controlpage-backend:latest`  | [controlpage-backend](https://gitlab.com/controlpage/controlpage-backend)   |
 | `gitlab-registry.fischerserver.eu/controlpage/controlpage-frontend:latest` | [controlpage-frontend](https://gitlab.com/controlpage/controlpage-frontend) |
 
-`latest` is the default branch of the project, every branch also gets an image tagged with its name.
+`latest` is the default branch of the project, other branches do not publish images.
 An image is only published if the tests of its project pass.
 
 ## ---WIP---
