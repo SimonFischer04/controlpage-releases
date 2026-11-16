@@ -3,18 +3,20 @@ version: '3'
 services:
   db:
     image: postgres:18
-    hostname: postgres-controlpage
+    hostname: controlpage-postgres
     container_name: controlpage_postgres
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=controlpage
-      - POSTGRES_USER=ControlPageUser
-      - POSTGRES_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
+      POSTGRES_DB: controlpage
+      POSTGRES_USER: controlpageuser
+      POSTGRES_PASSWORD: 6xovUH2QmUZooPTyYrpD9Js8fZRrMBrkqHzs4soRdP
+    # ports:
+    #   - "5433:5432"
     volumes:
       # since PostgreSQL 18 the image keeps its data below /var/lib/postgresql (in 18/docker)
-      - postgres_data:/var/lib/postgresql
+      - pgdata:/var/lib/postgresql
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "ControlPageUser", "-d", "controlpage"]
+      test: ["CMD", "pg_isready", "-U", "controlpageuser", "-d", "controlpage"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -50,10 +52,7 @@ services:
     ports:
       - 42000:42000
     environment:
-      - DB_HOST=postgres-controlpage
-      # same as POSTGRES_USER / POSTGRES_PASSWORD of the db
-      - SPRING_DATASOURCE_USERNAME=ControlPageUser
-      - SPRING_DATASOURCE_PASSWORD=DYxH2NgFh7A55BEqUYAMGPxPxLv6fD3DeCa487LWMD
+      - DB_HOST=controlpage-postgres
 
 volumes:
-  postgres_data:
+  pgdata:
