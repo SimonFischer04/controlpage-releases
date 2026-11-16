@@ -12,6 +12,12 @@ Furthermore, this project is mirrored to [GitHub](https://github.com/SimonFische
 
 This is where you can find the releases and deployment examples of the ControlPage application. For more information see the [Docs](https://gitlab.com/controlpage/controlpage-docs).
 
+## ---WIP---
+
+---
+
+# AUTO GENERATED SUMMARY
+
 ## Contents
 
 This repository only contains deployment files:
@@ -28,5 +34,3 @@ The images are built and published by the pipelines of the individual projects, 
 
 `latest` is the default branch of the project, other branches do not publish images.
 An image is only published if the tests of its project pass.
-
-## ---WIP---
